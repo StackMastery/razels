@@ -1,0 +1,27 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "https://github.com/programming-hero-web-course2/b10-a10-server-side-StackMastery",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon app.server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/programming-hero-web-course2/b10-a10-server-side-StackMastery.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/programming-hero-web-course2/b10-a10-server-side-StackMastery/issues"
+  },
+  "homepage": "https://github.com/programming-hero-web-course2/b10-a10-server-side-StackMastery#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.1",
+    "mongoose": "^8.8.3",
+    "nodemon": "^3.1.7"
+  }
+}
