@@ -2,10 +2,6 @@ import mongoose from 'mongoose';
 
 const myDonationSchema = new mongoose.Schema(
     {
-        campId: {
-            type: String,
-            required: true,
-        },
         ownerUid:{
             type: String,
             required: true,
@@ -13,6 +9,11 @@ const myDonationSchema = new mongoose.Schema(
         ammount:{
             type: Number,
             required: true,
+        },
+        campaign:{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'campaigns',
+            required: true
         }
     },
     {

@@ -56,29 +56,32 @@ const getCampaign = async (req, res) => {
 
 
 const getCampaignForHome = async (req, res) => {
+    const { limit } = req.query;
 
-    const { limit } = req.query
+    try {
+        const currentDate = new Date();
+        const camps = await Campaign.find({deadline: { $gte: currentDate }}).sort({ createdAt: -1, deadline: -1 }).limit(Number(limit));
 
-    try{
-        const camps = await Campaign.find().limit(limit).sort({createdAt: -1})
-        res.send(camps)
+        res.send(camps);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({ error: "Failed to fetch campaigns." });
     }
-    catch{
+};
 
-    }
-}
 
 
 const addDonations = async (req, res) => {
     const { CampId, OwnerUID, Ammount } = req.body
     try{
         const donation = myDonation({
-            campId: CampId,
+            campaign: CampId,
             ownerUid: OwnerUID,
             ammount: Ammount
         })
 
         const addDonation = await donation.save()
+        console.log(addDonation)
         res.status(200).send(addDonation)
     }
     catch(err){
@@ -90,7 +93,7 @@ const myCampaigns = async (req, res) => {
     const { ownerUID } = req.query
 
     try{
-        const findCamps = await Campaign.find({ ownerUid : ownerUID})
+        const findCamps = await Campaign.find({ ownerUid : ownerUID}).select('-description')
         if(findCamps.length > 0){
             res.status(200).send(findCamps)
         }else{
@@ -129,7 +132,7 @@ const deleteCampaign = async (req, res) => {
 
 const updatecampaign = async (req, res) => {
 
-    const { campId , thumb_URL, campTitle, campCategory , campMinAmmount, campDeadline, campDes, UserName, UserEmail, UserAvatar, OwnerUid  } = req.body
+    const { campId , thumb_URL, campTitle, campCategory , campMinAmmount, campDeadline, campDes, } = req.body
     
     try{
         const updateCampaign = await Campaign.findByIdAndUpdate(`${campId}`,{
@@ -148,4 +151,49 @@ const updatecampaign = async (req, res) => {
     }
 }
 
-export { addCampaign, getCampaign, getCampaignForHome, addDonations, myCampaigns, deleteCampaign, updatecampaign }
+const getMyDonations = async (req, res) =>{
+    const { ownerUID } = req.query
+
+    try{
+        const myDonations = await myDonation.find({ownerUid: ownerUID}).sort({createdAt: -1}).populate('campaign')
+        if(myCampaigns.length > 0){
+            res.status(200).send(myDonations)
+        }
+        else{
+            res.status(404).send({
+                code: 404,
+                msg: "You Have't Donated any campaign yet"
+            })
+        }
+    }
+    catch{
+        res.status(404).send({
+            code: 404,
+            msg: "You Have't Donated any campaign yet"
+        })
+    }
+}
+
+
+const GetAllCampaigns = async (req, res) => {
+    try{
+        const campaigns = await Campaign.find()
+        if(campaigns.length > 0){
+            res.status(200).send(campaigns)
+        }
+        else{
+            res.status(404).send({
+                code: 404, 
+                msg: 'No Data Was Found'
+            })
+        }
+    }
+    catch{
+        res.status(500).send({
+            code: 500,
+            msg: 'Some thing Went Wrong'
+        })
+    }
+}
+
+export { addCampaign, getCampaign, getCampaignForHome, addDonations, myCampaigns, deleteCampaign, updatecampaign, getMyDonations, GetAllCampaigns }
