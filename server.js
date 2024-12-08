@@ -11,14 +11,8 @@ dotenv.config()
 const app = express()
 const port = process.env.PORT || 3000
 
-const corsOptions = {
-    origin: `${process.env.ALLOWED_ORIGIN}`,
-    methods: 'GET,POST,PUT,PATCH,DELETE', 
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true,
-}
 // Middlewears
-app.use(cors(corsOptions))
+app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 
